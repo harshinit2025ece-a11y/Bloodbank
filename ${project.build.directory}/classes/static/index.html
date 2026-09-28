@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        if (sessionStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "/login.html";
+        }
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BloodCare | Blood Bank Management</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">🩸</div>
+
+            <div>
+                <h2>BloodCare</h2>
+                <span>Blood Bank System</span>
+            </div>
+        </div>
+
+        <nav>
+
+            <p class="menu-title">MAIN</p>
+
+            <a href="#" class="nav-item active" onclick="showSection('dashboard')">
+                <span>⌂</span>
+                Dashboard
+            </a>
+
+            <a href="#" class="nav-item" onclick="showSection('inventory')">
+                <span>🩸</span>
+                Blood Inventory
+            </a>
+
+            <a href="#" class="nav-item" onclick="showSection('donors')">
+                <span>👥</span>
+                Donors
+            </a>
+
+            <a href="#" class="nav-item" onclick="showSection('donations')">
+                <span>💉</span>
+                Donations
+            </a>
+
+            <a href="#" class="nav-item" onclick="showSection('issues')">
+                <span>🏥</span>
+                Blood Issues
+            </a>
+
+            <p class="menu-title">SYSTEM</p>
+
+            <a href="#" class="nav-item">
+                <span>📊</span>
+                Reports
+            </a>
+
+            <a href="#" class="nav-item">
+                <span>⚙</span>
+                Settings
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="system-status">
+                <div class="status-dot"></div>
+
+                <div>
+                    <strong>System Online</strong>
+                    <small>Database connected</small>
+                </div>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div>
+                <h1>Dashboard</h1>
+                <p>Blood bank overview and inventory monitoring</p>
+            </div>
+
+            <div class="top-actions">
+
+                <button class="icon-button">
+                    🔔
+                </button>
+
+                <div class="profile">
+
+                    <div class="avatar">
+                        A
+                    </div>
+
+                    <div>
+                        <strong>Administrator</strong>
+                        <small>Blood Bank Manager</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- DASHBOARD -->
+
+        <section id="dashboard" class="section active-section">
+
+            <div class="welcome-card">
+
+                <div>
+
+                    <span class="welcome-label">
+                        BLOOD BANK OVERVIEW
+                    </span>
+
+                    <h2>
+                        Welcome back, Administrator 👋
+                    </h2>
+
+                    <p>
+                        Monitor donors, blood inventory, donations and issued units
+                        from one place.
+                    </p>
+
+                </div>
+
+                <div class="blood-drop">
+                    🩸
+                </div>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon donors-icon">
+                        👥
+                    </div>
+
+                    <div>
+                        <span>Total Donors</span>
+                        <h3 id="totalDonors">0</h3>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blood-icon">
+                        🩸
+                    </div>
+
+                    <div>
+                        <span>Total Blood Units</span>
+                        <h3 id="totalUnits">0</h3>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon available-icon">
+                        ✓
+                    </div>
+
+                    <div>
+                        <span>Available Units</span>
+                        <h3 id="availableUnits">0</h3>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon issue-icon">
+                        🏥
+                    </div>
+
+                    <div>
+                        <span>Issued Units</span>
+                        <h3 id="issuedUnits">0</h3>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MAIN GRID -->
+
+            <div class="dashboard-grid">
+
+                <!-- BLOOD STOCK -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <h3>Blood Group Stock</h3>
+                            <p>Current available inventory</p>
+                        </div>
+
+                        <span class="live-badge">
+                            ● LIVE
+                        </span>
+
+                    </div>
+
+                    <div id="bloodStock" class="blood-stock">
+
+                        <div class="loading">
+                            Loading inventory...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ALERTS -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <h3>Inventory Alerts</h3>
+                            <p>Units requiring attention</p>
+                        </div>
+
+                    </div>
+
+                    <div id="alerts">
+
+                        <div class="empty-state">
+                            Checking inventory...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT ACTIVITY -->
+
+            <div class="panel activity-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Recent Blood Issues</h3>
+                        <p>Latest hospital requests</p>
+                    </div>
+
+                    <button class="outline-button"
+                            onclick="showSection('issues')">
+                        View All
+                    </button>
+
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>Patient</th>
+                            <th>Hospital</th>
+                            <th>Blood Group</th>
+                            <th>Quantity</th>
+                            <th>Date</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="recentIssues">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- INVENTORY -->
+
+        <section id="inventory" class="section">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>Blood Inventory</h2>
+                    <p>Manage all blood units</p>
+                </div>
+
+                <button class="primary-button"
+                        onclick="openModal('bloodUnitModal')">
+                    + Add Blood Unit
+                </button>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Blood Group</th>
+                            <th>Collection Date</th>
+                            <th>Expiry Date</th>
+                            <th>Status</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="inventoryTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DONORS -->
+
+        <section id="donors" class="section">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>Donors</h2>
+                    <p>Registered blood donors</p>
+                </div>
+
+                <button class="primary-button"
+                        onclick="openModal('donorModal')">
+                    + Add Donor
+                </button>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Blood Group</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="donorsTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DONATIONS -->
+
+        <section id="donations" class="section">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>Donations</h2>
+                    <p>Blood donation records</p>
+                </div>
+
+                <button class="primary-button"
+                        onclick="openModal('donationModal')">
+                    + Record Donation
+                </button>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Donor</th>
+                            <th>Donation Date</th>
+                            <th>Collection Date</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="donationsTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ISSUES -->
+
+        <section id="issues" class="section">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>Blood Issues</h2>
+                    <p>Blood units issued to hospitals</p>
+                </div>
+
+                <button class="primary-button"
+                        onclick="openModal('issueModal')">
+                    + Issue Blood
+                </button>
+
+            </div>
+
+            <div class="panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Patient</th>
+                            <th>Hospital</th>
+                            <th>Blood Group</th>
+                            <th>Quantity</th>
+                            <th>Date</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="issuesTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- DONOR MODAL -->
+
+<div class="modal-overlay" id="donorModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Add Donor</h2>
+                <p>Register a new blood donor</p>
+            </div>
+
+            <button onclick="closeModal('donorModal')">
+                ×
+            </button>
+
+        </div>
+
+        <form id="donorForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input id="donorName"
+                           type="text"
+                           required
+                           placeholder="Enter donor name">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input id="donorPhone"
+                           type="text"
+                           required
+                           placeholder="Enter phone number">
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input id="donorEmail"
+                           type="email"
+                           placeholder="Enter email">
+                </div>
+
+                <div class="form-group">
+                    <label>Blood Group</label>
+
+                    <select id="donorBloodGroup" required>
+
+                        <option value="">Select group</option>
+
+                        <option value="A_POSITIVE">A+</option>
+                        <option value="A_NEGATIVE">A-</option>
+                        <option value="B_POSITIVE">B+</option>
+                        <option value="B_NEGATIVE">B-</option>
+                        <option value="AB_POSITIVE">AB+</option>
+                        <option value="AB_NEGATIVE">AB-</option>
+                        <option value="O_POSITIVE">O+</option>
+                        <option value="O_NEGATIVE">O-</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group full">
+                    <label>Date of Birth</label>
+
+                    <input id="donorDob"
+                           type="date"
+                           required>
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="cancel-button"
+                        onclick="closeModal('donorModal')">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="primary-button">
+                    Add Donor
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- DONATION MODAL -->
+
+<div class="modal-overlay" id="donationModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Record Donation</h2>
+                <p>Record a blood donation</p>
+            </div>
+
+            <button onclick="closeModal('donationModal')">
+                ×
+            </button>
+
+        </div>
+
+        <form id="donationForm">
+
+            <div class="form-group">
+
+                <label>Donor ID</label>
+
+                <input id="donationDonorId"
+                       type="number"
+                       required
+                       placeholder="Enter donor ID">
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="cancel-button"
+                        onclick="closeModal('donationModal')">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="primary-button">
+                    Record Donation
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- BLOOD UNIT MODAL -->
+
+<div class="modal-overlay" id="bloodUnitModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Add Blood Unit</h2>
+                <p>Add collected blood to inventory</p>
+            </div>
+
+            <button onclick="closeModal('bloodUnitModal')">
+                ×
+            </button>
+
+        </div>
+
+        <form id="bloodUnitForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Blood Group</label>
+
+                    <select id="unitBloodGroup" required>
+
+                        <option value="">Select group</option>
+
+                        <option value="A_POSITIVE">A+</option>
+                        <option value="A_NEGATIVE">A-</option>
+                        <option value="B_POSITIVE">B+</option>
+                        <option value="B_NEGATIVE">B-</option>
+                        <option value="AB_POSITIVE">AB+</option>
+                        <option value="AB_NEGATIVE">AB-</option>
+                        <option value="O_POSITIVE">O+</option>
+                        <option value="O_NEGATIVE">O-</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Donation ID</label>
+
+                    <input id="unitDonationId"
+                           type="number"
+                           required
+                           placeholder="Donation ID">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Collection Date</label>
+
+                    <input id="unitCollectionDate"
+                           type="date"
+                           required>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Expiry Date</label>
+
+                    <input id="unitExpiryDate"
+                           type="date"
+                           required>
+
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="cancel-button"
+                        onclick="closeModal('bloodUnitModal')">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="primary-button">
+                    Add Blood Unit
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ISSUE MODAL -->
+
+<div class="modal-overlay" id="issueModal">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Issue Blood</h2>
+                <p>Issue an available blood unit</p>
+            </div>
+
+            <button onclick="closeModal('issueModal')">
+                ×
+            </button>
+
+        </div>
+
+        <form id="issueForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>Blood Group</label>
+
+                    <select id="issueBloodGroup" required>
+
+                        <option value="">Select group</option>
+
+                        <option value="A_POSITIVE">A+</option>
+                        <option value="A_NEGATIVE">A-</option>
+                        <option value="B_POSITIVE">B+</option>
+                        <option value="B_NEGATIVE">B-</option>
+                        <option value="AB_POSITIVE">AB+</option>
+                        <option value="AB_NEGATIVE">AB-</option>
+                        <option value="O_POSITIVE">O+</option>
+                        <option value="O_NEGATIVE">O-</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Patient Name</label>
+
+                    <input id="issuePatient"
+                           type="text"
+                           required
+                           placeholder="Patient name">
+
+                </div>
+
+                <div class="form-group full">
+
+                    <label>Hospital Name</label>
+
+                    <input id="issueHospital"
+                           type="text"
+                           required
+                           placeholder="Hospital name">
+
+                </div>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button type="button"
+                        class="cancel-button"
+                        onclick="closeModal('issueModal')">
+                    Cancel
+                </button>
+
+                <button type="submit"
+                        class="primary-button">
+                    Issue Blood
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
